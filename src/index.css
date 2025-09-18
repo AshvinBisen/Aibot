@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+
+body {
+    background-color: black;
+    color: #fff;
+    font-family: "Roboto", sans-serif;
+}
+
+@media (max-width: 415px) {
+    .res {
+        display: flex;
+    flex-direction: column;
+}  
+}
