@@ -5,7 +5,7 @@ import { FiUser, FiEdit2, FiLogOut } from "react-icons/fi";
 import { RiWallet3Fill } from "react-icons/ri";
 import { SiCoinbase } from "react-icons/si";
 import { FaGhost, FaFirefoxBrowser } from "react-icons/fa";
-import { HiMenuAlt2 } from "react-icons/hi"; // hamburger icon
+import { HiMenuAlt2 } from "react-icons/hi";
 
 export default function Navbar({
   userName = "John Doe",
@@ -17,10 +17,10 @@ export default function Navbar({
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-background px-4 lg:h-18 lg:px-6">
-        {/* Left: Hamburger + Search */}
-        <div className="flex items-center gap-3">
-          {/* Hamburger - only on mobile */}
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-[#0a0a0a] px-4 lg:h-16 lg:px-6">
+        {/* Left Section */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          {/* Hamburger - Mobile only */}
           <button
             onClick={toggleSidebar}
             className="md:hidden text-white text-2xl"
@@ -28,13 +28,13 @@ export default function Navbar({
             <HiMenuAlt2 />
           </button>
 
-          {/* Search - hidden on small */}
+          {/* Search Bar - Hidden on small screens */}
           <div className="hidden md:block w-full max-w-xs md:max-w-[16rem] lg:max-w-[22rem] relative">
             <input
               type="text"
               placeholder="Search..."
               className="w-full rounded-lg bg-[#010101] border border-white/80 py-2 pl-10 pr-4 text-sm text-white 
-                        placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-white focus:border-white"
+                placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-white focus:border-white"
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@ export default function Navbar({
           </div>
         </div>
 
-        {/* Right */}
+        {/* Right Section */}
         <div className="flex items-center gap-2">
           {/* Wallet Button */}
           <button
@@ -69,8 +69,8 @@ export default function Navbar({
           <div className="relative">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center gap-2 rounded-md hover:bg-accent hover:text-accent-foreground 
-                h-9 px-3 text-sm font-medium"
+              className="inline-flex items-center gap-2 rounded-md hover:bg-[#1a1a1a] 
+                h-9 px-3 text-sm font-medium text-white"
             >
               <img
                 src={userAvatar}
@@ -91,19 +91,19 @@ export default function Navbar({
             </button>
 
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-[#000000] rounded-lg shadow-xl border border-white/80 overflow-hidden">
+              <div className="absolute right-0 mt-2 w-48 bg-[#000000] rounded-lg shadow-xl border border-white/80 overflow-hidden z-40">
                 <div className="px-4 py-2 border-b border-white/80 font-semibold text-white">
                   My Account
                 </div>
                 <Link
-                  to="/profile"
+                  to="/dashboard/profile"
                   className="flex items-center px-4 py-2 text-sm text-white hover:bg-[#2b2a2a] gap-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <FiUser className="w-4 h-4" /> My Profile
                 </Link>
                 <Link
-                  to="/profile/edit"
+                  to="/dashboard/profile/edit"
                   className="flex items-center px-4 py-2 text-sm text-white hover:bg-[#2b2a2a] gap-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -126,7 +126,7 @@ export default function Navbar({
 
       {/* Wallet Modal */}
       {isWalletOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
           <div className="bg-[#000000] border border-white/90 rounded-lg shadow-lg w-full max-w-md p-6 relative">
             <button
               onClick={() => setIsWalletOpen(false)}
@@ -142,10 +142,28 @@ export default function Navbar({
 
             <div className="grid gap-3">
               {[
-                { name: "MetaMask", desc: "Connect using browser wallet", icon: <FaFirefoxBrowser className="w-10 h-10 text-orange-500" /> },
-                { name: "WalletConnect", desc: "Connect using WalletConnect", icon: <RiWallet3Fill className="w-10 h-10 text-blue-500" /> },
-                { name: "Coinbase Wallet", desc: "Connect using Coinbase Wallet", icon: <SiCoinbase className="w-10 h-10 text-sky-400" /> },
-                { name: "Phantom", desc: "Connect using Phantom wallet", icon: <FaGhost className="w-10 h-10 text-purple-500" /> },
+                {
+                  name: "MetaMask",
+                  desc: "Connect using browser wallet",
+                  icon: (
+                    <FaFirefoxBrowser className="w-10 h-10 text-orange-500" />
+                  ),
+                },
+                {
+                  name: "WalletConnect",
+                  desc: "Connect using WalletConnect",
+                  icon: <RiWallet3Fill className="w-10 h-10 text-blue-500" />,
+                },
+                {
+                  name: "Coinbase Wallet",
+                  desc: "Connect using Coinbase Wallet",
+                  icon: <SiCoinbase className="w-10 h-10 text-sky-400" />,
+                },
+                {
+                  name: "Phantom",
+                  desc: "Connect using Phantom wallet",
+                  icon: <FaGhost className="w-10 h-10 text-purple-500" />,
+                },
               ].map((wallet, i) => (
                 <button
                   key={i}
@@ -157,14 +175,17 @@ export default function Navbar({
                 >
                   {wallet.icon}
                   <div className="flex flex-col items-start">
-                    <span className="font-medium text-white">{wallet.name}</span>
+                    <span className="font-medium text-white">
+                      {wallet.name}
+                    </span>
                     <span className="text-xs text-white/90">{wallet.desc}</span>
                   </div>
                 </button>
               ))}
             </div>
             <p className="text-center text-xs text-white mt-4">
-              By connecting a wallet, you agree to our Terms of Service and Privacy Policy
+              By connecting a wallet, you agree to our Terms of Service and
+              Privacy Policy
             </p>
           </div>
         </div>

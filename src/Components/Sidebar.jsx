@@ -8,6 +8,9 @@ import {
   FaHistory,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { FaCog, FaTools, FaWrench, FaSlidersH } from "react-icons/fa";
+import { MdSettings } from "react-icons/md";
+import { IoSettingsSharp } from "react-icons/io5";
 import {
   MdOutlineKeyboardDoubleArrowLeft,
   MdOutlineKeyboardDoubleArrowRight,
@@ -38,7 +41,7 @@ const Sidebar = ({ isMobileOpen, toggleSidebar }) => {
     { name: "Wallet Management", icon: <FaWallet />, path: "/dashboard/wallet-management" },
     { name: "Trend Settings", icon: <FaChartLine />, path: "/dashboard/trend-settings" },
     { name: "Trade History", icon: <FaHistory />, path: "/dashboard/trade-history" },
-    { name: "Setting", icon: <FaHistory />, path: "/dashboard/setting" },
+    { name: "Setting", icon: <FaCog />, path: "/dashboard/setting" },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -55,7 +58,7 @@ const Sidebar = ({ isMobileOpen, toggleSidebar }) => {
         <div className="flex items-center gap-2">
           <img src={botLogo} alt="Bot Logo" className="w-8 h-8" />
           {isExpanded && (
-            <h1 className="text-[18px] font-extrabold tracking-widest bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
+            <h1 className="text-[16px] font-extrabold tracking-widest bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
               AI Trade Bot
             </h1>
           )}
