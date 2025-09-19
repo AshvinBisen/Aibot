@@ -36,7 +36,6 @@ const LoginPage = () => {
       return;
     }
 
-    // ✅ save user in context + localStorage
     const userData = { email };
     login(userData);
 
@@ -60,10 +59,10 @@ const LoginPage = () => {
         </div>
 
         {/* Right Side */}
-        <div className="flex-1 relative py-5 p-2 xs:p-4 sm:p-6 md:p-10 bg-gradient-to-br from-[#071016]/70 to-[#0b0b0f]/60">
+        <div className="flex-1 flex items-center justify-center py-10 px-4 sm:px-6 md:px-10 bg-gradient-to-br from-[#071016]/70 to-[#0b0b0f]/60">
           <div className="absolute -top-10 -right-6 w-[300px] h-[200px] rounded-full bg-gradient-to-br from-[#18ffd6] to-[#2b7cff] opacity-30 blur-2xl pointer-events-none mix-blend-screen"></div>
 
-          <div className="relative z-10 w-full max-w-[95%] md:max-w-[90%] mx-auto px-6 md:px-10 py-6 rounded-[24px] md:rounded-[32px] shadow-2xl border border-white backdrop-blur-xl">
+          <div className="relative z-10 w-full max-w-[500px] px-6 md:px-10 py-8 rounded-[24px] md:rounded-[32px] shadow-2xl border border-white backdrop-blur-xl">
             <div className="flex justify-center mb-4">
               <img src={logo} alt="Bot logo" className="w-14 h-14 md:w-16 md:h-16" />
             </div>
@@ -138,7 +137,7 @@ const LoginPage = () => {
 
               <button
                 type="submit"
-                className="w-[100px] md:w-[120px] mt-4 py-2 md:py-3 m-auto rounded-xl bg-gradient-to-r from-[#00f0c2] to-[#5ad8ff] text-black font-bold shadow-2xl flex items-center justify-center gap-2 md:gap-3 text-sm md:text-base"
+                className="w-[160px] md:w-[180px] mt-4 py-2 md:py-3 mx-auto rounded-xl bg-gradient-to-r from-[#00f0c2] to-[#5ad8ff] text-black font-bold shadow-2xl flex items-center justify-center gap-2 md:gap-3 text-sm md:text-base"
               >
                 Sign in <FaArrowRight />
               </button>

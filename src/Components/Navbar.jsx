@@ -17,7 +17,7 @@ export default function Navbar({
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-[#0a0a0a] px-4 lg:h-16 lg:px-6">
+      <header className="sticky top-0 z-30  flex h-14 items-center justify-between border-b bg-[#0a0a0a] px-4 lg:h-16 lg:px-6">
         {/* Left Section */}
         <div className="flex items-center gap-3 w-full md:w-auto">
           {/* Hamburger - Mobile only */}

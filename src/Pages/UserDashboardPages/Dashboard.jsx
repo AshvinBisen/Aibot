@@ -161,7 +161,7 @@ const Dashboard = () => {
 
 
   return (
-    <div className=" p-1 sm:p-2 md:p-4 lg:p-6 space-y-8 pt-4 w-full">
+    <div className=" p-1 sm:p-2 md:p-4 lg:p-6 space-y-8 pt-4 w-full ">
       {/* Top 5 Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {/* Account */}

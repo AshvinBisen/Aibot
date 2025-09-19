@@ -55,11 +55,11 @@ const ForgetPasswordPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#060D12] flex justify-center">
+    <div className="min-h-screen w-full bg-[#060D12] flex justify-center">
       {/* ✅ Toast container */}
       <Toaster position="top-right" reverseOrder={false} />
 
-      <div className="flex w-full min-h-screen flex-col-reverse lg:flex-row overflow-hidden">
+      <div className="flex w-full  flex-col-reverse lg:flex-row overflow-hidden">
         {/* Left Side */}
         <div className="flex-1 bg-black/40 relative hidden sm:block">
           <img
