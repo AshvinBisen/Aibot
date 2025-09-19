@@ -22,8 +22,10 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
-import { FaCheckCircle } from "react-icons/fa";
-import logo from '../../assets/logo.png'
+import { FaCheckCircle, FaRobot, FaUserFriends } from "react-icons/fa";
+import logo from "../../assets/logo.png";
+
+
 
 
 
@@ -182,11 +184,12 @@ const Dashboard = () => {
           <p className="text-sm text-green-400">+78.99%</p>
         </div>
 
+
          {/* Ai Bot */}
         <div className="rounded-xl bg-gradient-to-br from-gray-900 to-black border border-gray-800 p-5 shadow-md">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-gray-400 text-sm font-medium">AI Bots</h3>
-            <FaDollarSign className="text-yellow-400" size={22} />
+             <FaRobot className="text-yellow-400" size={22} />
           </div>
           <p className="text-2xl font-bold text-white">1</p>
           <p className="text-sm text-green-400">200 Trades</p>
@@ -197,7 +200,7 @@ const Dashboard = () => {
         <div className="rounded-xl bg-gradient-to-br from-gray-900 to-black border border-gray-800 p-5 shadow-md">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-gray-400 text-sm font-medium">Direct Referrals</h3>
-            <FaUsers className="text-purple-400" size={22} />
+            <FaUserFriends className="text-purple-400" size={22} />
           </div>
           <p className="text-2xl font-bold text-white">10</p>
           <p className="text-sm text-green-400">Active</p>
@@ -209,7 +212,7 @@ const Dashboard = () => {
         <div className="rounded-xl bg-gradient-to-br from-gray-900 to-black border border-gray-800 p-5 shadow-md">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-gray-400 text-sm font-medium">Total Members</h3>
-            <FaClipboardList className="text-pink-400" size={22} />
+            <FaUsers className="text-pink-400" size={22} />
           </div>
           <p className="text-2xl font-bold text-white">30</p>
           <p className="text-sm text-green-400">Running</p>

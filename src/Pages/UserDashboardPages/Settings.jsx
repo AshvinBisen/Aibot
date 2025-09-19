@@ -12,6 +12,10 @@ const Settings = () => {
   const [logs, setLogs] = useState([]);
   const [botCount, setBotCount] = useState(1);
 
+
+  const [message, setMessage] = useState(null);
+
+  // Logs update auto
   useEffect(() => {
     const interval = setInterval(() => {
       setLogs((prev) => [...prev, `Log at ${new Date().toLocaleTimeString()}`]);
@@ -20,19 +24,44 @@ const Settings = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText("https://dummydata.com/register?ref=demo123");
-    const msg = document.getElementById("copiedMessage");
-    msg.classList.remove("hidden");
-    setTimeout(() => msg.classList.add("hidden"), 2000);
+  // ✅ Helper for notification
+  const showMessage = (text, type = "success") => {
+    setMessage({ text, type });
+    setTimeout(() => setMessage(null), 3000);
   };
 
-  const handleSaveConfig = () => alert("Configuration Saved!");
-  const handleUpdatePassword = () => alert("Password Updated!");
-  const handleRestartBot = () => alert("Bot Restarted!");
+  // Handlers
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText("https://dummydata.com/register?ref=demo123");
+    showMessage("✅ Referral link copied to clipboard!", "success");
+  };
+
+  const handleSaveConfig = () => showMessage("✅ Configuration saved!", "success");
+  const handleUpdatePassword = () =>
+    password
+      ? showMessage("✅ Password updated!", "success")
+      : showMessage("⚠️ Password cannot be empty!", "error");
+  const handleRestartBot = () => showMessage("🔄 Bot restarted!", "success");
+  const handleSaveBot = () =>
+    showMessage(`✅ ${botCount} Bot(s) saved successfully!`, "success");
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8 relative">
+      {/* ✅ Notification Bar */}
+{message && (
+  <div
+    className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 
+      px-5 py-3 rounded-xl shadow-xl flex items-center gap-2 text-base font-medium
+      ${message.type === "success" 
+        ? "bg-white text-green-700 border border-green-400" 
+        : "bg-white text-red-700 border border-red-400"
+      }`}
+  >
+    {message.type === "success" ? "✅" : "⚠️"} {message.text}
+  </div>
+)}
+
+
       {/* ✅ Row 1: Top Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-2xl p-5 shadow-md">
@@ -110,7 +139,7 @@ const Settings = () => {
         </div>
       </div>
 
-      {/* ✅ Row 3: Set Bot (Left) + Security (Center) + Referral Link (Right) */}
+      {/* ✅ Row 3: Set Bot + Security + Referral Link */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Set My Bot */}
         <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-2xl p-6 shadow-xl">
@@ -129,8 +158,16 @@ const Settings = () => {
               </option>
             ))}
           </select>
-          <p className="mt-4 text-gray-300">
-            ✅ You have set{" "}
+
+          <button
+            onClick={handleSaveBot}
+            className="mt-4 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-xl font-semibold shadow-md transition-all"
+          >
+            Save Bot
+          </button>
+
+          <p className="mt-3 text-gray-300 text-sm">
+            Currently set:{" "}
             <span className="font-bold text-green-400">{botCount}</span> bot(s).
           </p>
         </div>
@@ -180,9 +217,6 @@ const Settings = () => {
           >
             <MdContentCopy /> Copy Link
           </button>
-          <div id="copiedMessage" className="hidden text-xs text-green-400 mt-2">
-            ✅ Link copied to clipboard!
-          </div>
         </div>
       </div>
     </div>

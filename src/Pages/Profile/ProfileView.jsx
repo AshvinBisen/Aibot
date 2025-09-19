@@ -1,4 +1,3 @@
-// src/Pages/Profile/ProfileView.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { MdContentCopy, MdEdit } from "react-icons/md";
@@ -14,6 +13,14 @@ const ProfileView = () => {
     enable2FA: true,
     loginAlerts: true,
   });
+
+  const [copyMessage, setCopyMessage] = useState(false);
+
+  const handleCopyWallet = () => {
+    navigator.clipboard.writeText(user.walletAddress);
+    setCopyMessage(true);
+    setTimeout(() => setCopyMessage(false), 3000); // Hide after 3 sec
+  };
 
   return (
     <div className="p-6 sm:p-8 lg:p-12 space-y-8">
@@ -62,16 +69,16 @@ const ProfileView = () => {
           {/* Wallet */}
           <div>
             <label className="text-gray-400 text-sm mb-1 block">Wallet Address</label>
-            <div className="flex items-center gap-2 bg-gray-800 border border-gray-700 p-3 rounded-xl text-green-400 font-mono">
+            <div className="flex items-center gap-2 bg-gray-800 border border-gray-700 p-3 rounded-xl text-green-400 font-mono relative">
               {user.walletAddress}
               <MdContentCopy
                 className="cursor-pointer hover:text-white"
-                onClick={() => {
-                  navigator.clipboard.writeText(user.walletAddress);
-                  alert("Wallet address copied!");
-                }}
+                onClick={handleCopyWallet}
               />
             </div>
+            {copyMessage && (
+              <p className="text-green-400 text-sm mt-1">✅ Wallet address copied!</p>
+            )}
           </div>
         </div>
 
