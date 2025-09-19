@@ -53,7 +53,7 @@ const ResetPasswordPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#060D12] flex justify-center">
+    <div className="min-h-screen w-full bg-[#060D12] flex justify-center">
       <Toaster position="top-right" reverseOrder={false} />
 
       <div className="flex w-full min-h-screen flex-col-reverse lg:flex-row overflow-hidden">

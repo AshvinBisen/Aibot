@@ -45,7 +45,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#060D12]">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#060D12]">
       {/* ✅ Toast container */}
       <Toaster position="top-right" reverseOrder={false} />
 
