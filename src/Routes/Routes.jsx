@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";   // ✅ Navigate import kiya
 import Login from "../Pages/Auther/Login";
 import Signup from "../Pages/Auther/Signup";
 import ForgotPassword from "../Pages/Auther/ForgotPassword";
@@ -21,6 +21,9 @@ import ProtectedRoute from "../Components/ProtectedRoute";
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* ✅ Root par redirect kare login page par */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
+
       {/* 🔑 Auth Pages */}
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
@@ -42,7 +45,7 @@ const AppRoutes = () => {
         <Route path="wallet-management" element={<WalletManagement />} />
         <Route path="trend-settings" element={<TrendSettings />} /> 
         <Route path="trade-history" element={<TradeHistory />} /> 
-         <Route path="setting" element={<Setting />} /> 
+        <Route path="setting" element={<Setting />} /> 
 
         {/* 👤 Profile Routes */}
         <Route path="profile" element={<Profile />} /> 
