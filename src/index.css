@@ -5,6 +5,7 @@ body {
     background-color: black;
     color: #fff;
     font-family: "Roboto", sans-serif;
+    overflow-x: hidden;
 }
 
 @media (max-width: 415px) {

@@ -25,7 +25,7 @@ import {
 import { FaCheckCircle } from "react-icons/fa";
 import logo from '../../assets/logo.png'
 
-import MyHistory from './SubComponets/MyHistory'
+
 
 
 // Dummy Data
@@ -123,7 +123,6 @@ const trades = [
 
 
 
-
 const Dashboard = () => {
   const [chartType, setChartType] = useState("weekly");
 
@@ -160,7 +159,7 @@ const Dashboard = () => {
 
 
   return (
-    <div className=" p-1 sm:p-2 md:p-4 lg:p-6 space-y-8 pt-4">
+    <div className=" p-1 sm:p-2 md:p-4 lg:p-6 space-y-8 pt-4 w-full">
       {/* Top 5 Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {/* Account */}
@@ -508,7 +507,7 @@ const Dashboard = () => {
       </h2>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left border-collapse">
+        <table className="w-full text-sm text-left border-collapse ">
           <thead>
             <tr className="bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-gray-800 shadow-xl text-white">
               <th className="px-4 py-2 font-medium">AI Bots</th>
@@ -539,17 +538,6 @@ const Dashboard = () => {
         </table>
       </div>
     </div>
-
-
-      {/* SECTION-5  */}
-
-   
-<MyHistory />
-    
-
-
-
-
 
 
     </div>

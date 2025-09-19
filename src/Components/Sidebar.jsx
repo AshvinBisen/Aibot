@@ -38,6 +38,7 @@ const Sidebar = ({ isMobileOpen, toggleSidebar }) => {
     { name: "Wallet Management", icon: <FaWallet />, path: "/dashboard/wallet-management" },
     { name: "Trend Settings", icon: <FaChartLine />, path: "/dashboard/trend-settings" },
     { name: "Trade History", icon: <FaHistory />, path: "/dashboard/trade-history" },
+    { name: "Setting", icon: <FaHistory />, path: "/dashboard/setting" },
   ];
 
   const isActive = (path) => location.pathname === path;

@@ -18,10 +18,10 @@ const DashboardLayout = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Navbar */}
-        <Navbar toggleSidebar={() => setIsMobileOpen(!isMobileOpen)} />
+        {/* <Navbar toggleSidebar={() => setIsMobileOpen(!isMobileOpen)} /> */}
 
         {/* Outlet */}
-        <main className="flex-1 p-2 md:p-3 lg:p-4 overflow-y-auto">
+        <main className="flex-1 p-2 md:p-3 lg:p-4 overflow-y-auto ">
           <Outlet />
         </main>
       </div>

@@ -9,6 +9,7 @@ import Dashboard from "../Pages/UserDashboardPages/Dashboard";
 import WalletManagement from "../Pages/UserDashboardPages/WalletManagement";
 import TrendSettings from "../Pages/UserDashboardPages/TrendSettings";
 import TradeHistory from "../Pages/UserDashboardPages/TradeHistory";
+import Setting from "../Pages/UserDashboardPages/Settings";
 
 import Profile from "../Pages/Profile/ProfileView";         
 import ProfileEdit from "../Pages/Profile/ProfileEdit"; 
@@ -41,6 +42,7 @@ const AppRoutes = () => {
         <Route path="wallet-management" element={<WalletManagement />} />
         <Route path="trend-settings" element={<TrendSettings />} /> 
         <Route path="trade-history" element={<TradeHistory />} /> 
+         <Route path="setting" element={<Setting />} /> 
 
         {/* 👤 Profile Routes */}
         <Route path="profile" element={<Profile />} /> 
