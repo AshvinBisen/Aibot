@@ -17,6 +17,7 @@ import { useAuth } from "../../Hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import CopyIconButton from "../../Components/CopyButton";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -158,6 +159,7 @@ const Dashboard = () => {
           <table className="w-full min-w-[700px] text-sm text-left border-collapse table-auto">
             <thead className="bg-gray-800 text-gray-300">
               <tr>
+                <th className="py-2 px-3 w-[30px]">S.No</th>
                 <th className="px-4 py-2 w-[80px]">Type</th>
                 <th className="px-4 py-2 w-[120px]">Token Amount</th>
                 <th className="px-4 py-2 w-[120px]">USDT Amount</th>
@@ -170,13 +172,16 @@ const Dashboard = () => {
             <tbody>
               {filteredTrades.map((trade, index) => (
                 <tr key={index} className="border-t border-gray-700 hover:bg-gray-800/70 transition">
+                  <td className="px-4 py-2">{index + 1}</td>
                   <td className={`px-4 py-2 font-semibold ${trade.type === "sell" ? "text-red-400" : "text-green-400"}`}>
                     {trade.type.toUpperCase()}
                   </td>
                   <td className="px-4 py-2 text-gray-300">{parseFloat(trade.token_amount).toFixed(4)}</td>
                   <td className="px-4 py-2 text-gray-300">{parseFloat(trade.usdt_amount).toFixed(4)}</td>
                   <td className="px-4 py-2 text-gray-300">{parseFloat(trade.price).toFixed(6)}</td>
-                  <td className="px-4 py-2 break-words max-w-[150px] text-gray-300">{trade.wallet_address}</td>
+                  <td className="px-4 py-2 break-words max-w-[150px] text-gray-300">
+                       {trade.wallet_address?.slice(0, 8)}...{trade.wallet_address?.slice(-6)}  <CopyIconButton text={trade.wallet_address} /> 
+                  </td>
                   <td className="px-4 py-2 text-gray-300">{new Date(trade.timestamp).toLocaleString()}</td>
                   <td className="px-4 py-2 text-gray-300">{parseFloat(trade.gas_fee_bnb).toFixed(6)}</td>
                 </tr>

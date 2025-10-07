@@ -7,11 +7,12 @@ import ResetPassword from "../Pages/Auther/ResetPassword";
 
 import Dashboard from "../Pages/UserDashboardPages/Dashboard";
 import WalletManagement from "../Pages/UserDashboardPages/WalletManagement";
+import BotWallet from "../Pages/UserDashboardPages/BotWallet";
 import TrendSettings from "../Pages/UserDashboardPages/TrendSettings";
 import TradeHistory from "../Pages/UserDashboardPages/TradeHistory";
 import LastBalance from "../Pages/UserDashboardPages/LastBalance";
 import Topups from "../Pages/UserDashboardPages/Topups";
-// import Setting from "../Pages/UserDashboardPages/Settings";
+import Setting from "../Pages/UserDashboardPages/Settings";
 
 import Profile from "../Pages/Profile/ProfileView";         
 import ProfileEdit from "../Pages/Profile/ProfileEdit"; 
@@ -45,11 +46,12 @@ const AppRoutes = () => {
       >
         <Route index element={<Dashboard />} /> 
         <Route path="wallet-management" element={<WalletManagement />} />
+         <Route path="bot-wallet" element={<BotWallet />} />
         <Route path="trend-settings" element={<TrendSettings />} /> 
         <Route path="trade-history" element={<TradeHistory />} /> 
         <Route path="last-balance" element={<LastBalance />} />
         <Route path="top-ups" element={<Topups />} />
-        {/* <Route path="setting" element={<Setting />} />  */}
+        <Route path="setting" element={<Setting />} /> 
 
         {/* 👤 Profile Routes */}
         <Route path="profile" element={<Profile />} /> 

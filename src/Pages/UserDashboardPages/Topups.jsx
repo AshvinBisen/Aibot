@@ -1,28 +1,25 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useAuth } from "../../Hooks/useAuth";
-import { FaRegCopy, FaFileExcel } from "react-icons/fa";
+import { FaRegCopy, FaFileExcel, FaDollarSign, FaBitcoin, FaEthereum, FaCoins } from "react-icons/fa";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import CopyIconButton from "../../Components/CopyButton";
 
 // Copy button
 function CopyButtonIcon({ text }) {
   const [copied, setCopied] = useState(false);
-
   const handleCopy = () => {
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
-
   return (
     <button
       onClick={handleCopy}
       title={copied ? "Copied!" : "Copy"}
-      className={`ml-2 p-1 rounded-full ${
-        copied ? "bg-green-600 text-white" : "bg-gray-700 text-white"
-      }`}
+      className={`ml-2 p-1 rounded-full ${copied ? "bg-green-600 text-white" : "bg-gray-700 text-white"}`}
       style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
     >
       <FaRegCopy size={14} />
@@ -46,6 +43,7 @@ const Topups = () => {
     const cached = localStorage.getItem("topups");
     return cached ? JSON.parse(cached) : [];
   });
+  const [statistics, setStatistics] = useState(null);
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState(getMonthAgo());
   const [endDate, setEndDate] = useState(getToday());
@@ -55,7 +53,7 @@ const Topups = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(topups.length);
 
-  // Fetch topups
+  // Fetch topups + statistics
   const fetchTopups = useCallback(
     async (page = 1) => {
       if (!user?.token) return;
@@ -71,8 +69,9 @@ const Topups = () => {
         });
 
         if (res.data?.success) {
-          const { topups, pagination } = res.data.data;
+          const { topups, pagination, statistics } = res.data.data;
           setTopups(topups || []);
+          setStatistics(statistics || null);
           setTotalItems(pagination?.total || topups.length);
           setTotalPages(pagination?.totalPages || 1);
 
@@ -139,9 +138,54 @@ const Topups = () => {
   );
 
   return (
-    <div className="p-4 w-full max-w-full bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-gray-800 shadow-xl">
-      <h2 className="text-2xl font-semibold mb-4 text-left">Topups</h2>
+    <div className="p-2 sm:p-4 w-full max-w-full ">
+      
+      {/* ✅ Statistics Cards Section */}
+      {statistics && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 mb-6">
+          {[
+            {
+              title: "Total Topups",
+              value: statistics.total_topups || 0,
+              icon: <FaCoins className="text-yellow-400" size={22} />,
+              subtitle: "Transactions",
+            },
+            {
+              title: "Total USDT",
+              value: statistics.total_usdt || 0,
+              icon: <FaDollarSign className="text-green-400" size={22} />,
+              subtitle: "Amount",
+            },
+            {
+              title: "Total BNB",
+              value: statistics.total_bnb || 0,
+              icon: <FaBitcoin className="text-pink-400" size={22} />,
+              subtitle: "Amount",
+            },
+            {
+              title: "Total Token",
+              value: statistics.total_token || 0,
+              icon: <FaEthereum className="text-purple-400" size={22} />,
+              subtitle: "Amount",
+            },
+          ].map((card, index) => (
+            <div
+              key={index}
+              className="rounded-xl bg-gradient-to-br from-gray-900 to-black border border-gray-800 p-5 shadow-md"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-gray-400 text-sm font-medium">{card.title}</h3>
+                {card.icon}
+              </div>
+              <p className="text-lg font-bold text-white">{card.value}</p>
+              <p className="text-sm text-green-400">{card.subtitle}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
+      <div className="p-4 w-full max-w-full bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-gray-800 shadow-xl">
+      <h2 className="text-2xl font-semibold mb-4 text-left">Topups</h2>
       {/* Filters */}
       <div className="mb-4 flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex gap-2 w-full sm:w-auto justify-end items-center flex-col sm:flex-row">
@@ -177,6 +221,7 @@ const Topups = () => {
           <table className="w-full text-sm text-left border-collapse table-auto">
             <thead className="bg-gray-800 text-gray-300">
               <tr>
+                <th className="py-2 px-3">S no</th>
                 <th className="py-2 px-3">ID</th>
                 <th className="py-2 px-3">Wallet</th>
                 <th className="py-2 px-3">Token</th>
@@ -190,25 +235,29 @@ const Topups = () => {
               {filteredTopups.length > 0 ? (
                 filteredTopups.map((t, i) => (
                   <tr key={i} className="border-b border-gray-800 hover:bg-gray-700/50">
+                    <td className="py-2 px-3">{(currentPage - 1) * itemsPerPage + i + 1}</td>
                     <td className="py-2 px-3 flex items-center">
                       <span>{t.id}</span>
-                      <CopyButtonIcon text={t.id} />
+                      <CopyIconButton text={t.id} />
                     </td>
                     <td className="py-2 px-3 truncate max-w-[150px]">
                       {t.wallet_address?.slice(0, 8)}...{t.wallet_address?.slice(-6)}
+                      <CopyIconButton text={t.wallet_address} />
                     </td>
                     <td className="py-2 px-3 flex items-center gap-1">
                       {t.token_icon} {t.token_type}
                     </td>
                     <td className="py-2 px-3">{parseFloat(t.amount).toFixed(6)}</td>
                     <td className="py-2 px-3">{t.token_symbol}</td>
-                    <td className="py-2 px-3 truncate max-w-[180px]">{t.tx_hash}</td>
+                    <td className="py-2 px-3 truncate max-w-[180px]">
+                      {t.tx_hash?.slice(0, 8)}...{t.tx_hash?.slice(-6)} <CopyIconButton text={t.tx_hash} />
+                    </td>
                     <td className="py-2 px-3 whitespace-nowrap">{new Date(t.timestamp).toLocaleString()}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="py-6 text-center text-gray-400">
+                  <td colSpan="8" className="py-6 text-center text-gray-400">
                     No topups found
                   </td>
                 </tr>
@@ -242,8 +291,11 @@ const Topups = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };
 
 export default Topups;
+
+

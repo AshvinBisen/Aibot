@@ -42,9 +42,10 @@ const Sidebar = ({ isMobileOpen, toggleSidebar }) => {
     { name: "Dashboard", icon: <FaThLarge />, path: "/dashboard" },
     { name: "Trade History", icon: <FaHistory />, path: "/dashboard/trade-history" },
     { name: "Wallet Management", icon: <FaWallet />, path: "/dashboard/wallet-management" },
+    { name: "Bot Wallet", icon: <FaWallet />, path: "/dashboard/bot-wallet" },
     { name: "Last Balance", icon: <FaBalanceScale />, path: "/dashboard/last-balance" },
     { name: "Trend Settings", icon: <FaChartLine />, path: "/dashboard/trend-settings" },
-    { name: "Top-ups", icon: <FaTools />, path: "/dashboard/top-ups" },
+    { name: "Top Ups", icon: <FaTools />, path: "/dashboard/top-ups" },
     // { name: "Setting", icon: <FaCog />, path: "/dashboard/setting" },
   ];
 
