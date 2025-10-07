@@ -8,9 +8,11 @@ import {
   FaHistory,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { FaBalanceScale } from "react-icons/fa";
 import { FaCog, FaTools, FaWrench, FaSlidersH } from "react-icons/fa";
 import { MdSettings } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
+import { CgArrowsExchange } from "react-icons/cg";
 import {
   MdOutlineKeyboardDoubleArrowLeft,
   MdOutlineKeyboardDoubleArrowRight,
@@ -38,10 +40,12 @@ const Sidebar = ({ isMobileOpen, toggleSidebar }) => {
 
   const navItems = [
     { name: "Dashboard", icon: <FaThLarge />, path: "/dashboard" },
-    { name: "Wallet Management", icon: <FaWallet />, path: "/dashboard/wallet-management" },
-    { name: "Trend Settings", icon: <FaChartLine />, path: "/dashboard/trend-settings" },
     { name: "Trade History", icon: <FaHistory />, path: "/dashboard/trade-history" },
-    { name: "Setting", icon: <FaCog />, path: "/dashboard/setting" },
+    { name: "Wallet Management", icon: <FaWallet />, path: "/dashboard/wallet-management" },
+    { name: "Last Balance", icon: <FaBalanceScale />, path: "/dashboard/last-balance" },
+    { name: "Trend Settings", icon: <FaChartLine />, path: "/dashboard/trend-settings" },
+    { name: "Top-ups", icon: <FaTools />, path: "/dashboard/top-ups" },
+    // { name: "Setting", icon: <FaCog />, path: "/dashboard/setting" },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -59,7 +63,7 @@ const Sidebar = ({ isMobileOpen, toggleSidebar }) => {
           <img src={botLogo} alt="Bot Logo" className="w-8 h-8" />
           {isExpanded && (
             <h1 className="text-[16px] font-extrabold tracking-widest bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
-              AI Trade Bot
+              Volume Bot
             </h1>
           )}
         </div>

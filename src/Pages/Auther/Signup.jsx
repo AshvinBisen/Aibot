@@ -1,52 +1,70 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
 import { FaArrowRight } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import logo from "../../assets/logo.png";
 import botImage from "../../assets/bg_logo.jpg";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 const SignUpPage = () => {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPwd, setConfirmPwd] = useState("");
+  const [adminPasscode, setAdminPasscode] = useState("");
   const [showPwd, setShowPwd] = useState(false);
-  const [showConfirmPwd, setShowConfirmPwd] = useState(false);
+  const [showAdminPasscode, setShowAdminPasscode] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setName("");
-    setEmail("");
-    setPassword("");
-    setConfirmPwd("");
-  }, []);
-
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !password || !confirmPwd) {
-      toast.error("Please fill in all fields");
+    // ✅ Validate fields
+    if (!email.trim() || !password.trim() || !adminPasscode.trim()) {
+      toast.error("Please fill in all fields ❌");
       return;
     }
 
-    if (password !== confirmPwd) {
-      toast.error("Passwords do not match");
-      return;
-    }
+    setLoading(true);
 
-    // ✅ success
-    toast.success("Account created successfully 🎉", { duration: 2000 });
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 2000);
+    try {
+      // ✅ API request
+      const response = await axios.post("https://volumebot.furfoori.com/api/signup", {
+        email,
+        password,
+        role: "user",
+        adminPasscode,
+      });
+
+      if (response.data.success) {
+        toast.success("Account created successfully 🎉");
+
+        // ✅ Reset form
+        setEmail("");
+        setPassword("");
+        setAdminPasscode("");
+
+        // ✅ Redirect to login page
+        setTimeout(() => navigate("/login"), 2000);
+      } else {
+        toast.error("Signup failed ❌");
+      }
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else if (error.response?.status === 400) {
+        toast.error("Email already exists ❌");
+      } else {
+        toast.error("Something went wrong. Please try again ❌");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-[#060D12]">
-      {/* ✅ Toast container */}
       <Toaster position="top-right" reverseOrder={false} />
 
       <div className="flex w-full min-h-full overflow-hidden flex-col-reverse lg:flex-row gap-5">
@@ -54,7 +72,7 @@ const SignUpPage = () => {
         <div className="flex-1 bg-black/40 relative hidden sm:block">
           <img
             src={botImage}
-            alt="AI Trading Bot"
+            alt="Volume Bot"
             className="w-full h-full object-cover opacity-90"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#05060a] via-transparent to-transparent"></div>
@@ -73,24 +91,10 @@ const SignUpPage = () => {
               Create Account
             </h1>
             <p className="text-center text-base md:text-lg text-[#FFF] mt-2 mb-6">
-              Sign up to get started with your AI Trading Bot
+              Sign up with Admin Access
             </p>
 
             <form onSubmit={handleSignUp} className="space-y-4" autoComplete="off">
-              {/* Name */}
-              <div className="px-2 md:px-4 py-2 md:py-3">
-                <label className="text-base md:text-[20px] text-[#00f0c2] block mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="John Doe"
-                  className="w-full text-white outline-none bg-[#0b0f12]/60 border border-white/60 hover:border-white rounded-xl px-3 py-2 md:px-4 md:py-3 text-sm md:text-base"
-                />
-              </div>
-
               {/* Email */}
               <div className="px-2 md:px-4 py-2 md:py-3">
                 <label className="text-base md:text-[20px] text-[#00f0c2] block mb-2">
@@ -102,6 +106,7 @@ const SignUpPage = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="mail@gmail.com"
                   className="w-full text-white outline-none bg-[#0b0f12]/60 border border-white/60 hover:border-white rounded-xl px-3 py-2 md:px-4 md:py-3 text-sm md:text-base"
+                  required
                 />
               </div>
 
@@ -117,6 +122,7 @@ const SignUpPage = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     className="flex-1 bg-transparent text-white outline-none text-sm md:text-[16px]"
+                    required
                   />
                   <button
                     type="button"
@@ -128,49 +134,40 @@ const SignUpPage = () => {
                 </div>
               </div>
 
-              {/* Confirm Password */}
+              {/* Admin Passcode */}
               <div className="relative px-2 md:px-4 py-2 md:py-3">
                 <label className="text-base md:text-[20px] text-[#00f0c2] block mb-1">
-                  Confirm Password
+                  Admin Passcode
                 </label>
                 <div className="flex items-center bg-[#0b0f12]/60 border border-white/60 hover:border-white rounded-xl px-3 py-2 md:px-4 md:py-3">
                   <input
-                    type={showConfirmPwd ? "text" : "password"}
-                    value={confirmPwd}
-                    onChange={(e) => setConfirmPwd(e.target.value)}
-                    placeholder="••••••••"
+                    type={showAdminPasscode ? "text" : "password"}
+                    value={adminPasscode}
+                    onChange={(e) => setAdminPasscode(e.target.value)}
+                    placeholder="Enter Admin Code"
                     className="flex-1 bg-transparent text-white outline-none text-sm md:text-[16px]"
+                    required
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPwd((s) => !s)}
+                    onClick={() => setShowAdminPasscode((s) => !s)}
                     className="ml-3 text-gray-300"
                   >
-                    {showConfirmPwd ? <HiOutlineEyeOff /> : <HiOutlineEye />}
+                    {showAdminPasscode ? <HiOutlineEyeOff /> : <HiOutlineEye />}
                   </button>
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-[100px] md:w-[120px] mt-4 py-2 md:py-3 m-auto rounded-xl bg-gradient-to-r from-[#00f0c2] to-[#5ad8ff] text-black font-bold shadow-2xl flex items-center justify-center gap-2 md:gap-3 text-sm md:text-base"
+                className={`w-[120px] mt-4 py-2 md:py-3 m-auto rounded-xl bg-gradient-to-r from-[#00f0c2] to-[#5ad8ff] text-black font-bold shadow-2xl flex items-center justify-center gap-2 md:gap-3 text-sm md:text-base ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={loading}
               >
-                Sign up <FaArrowRight />
+                {loading ? "Signing..." : "Sign up"} <FaArrowRight />
               </button>
             </form>
-
-            {/* OR divider */}
-            {/* <div className="flex items-center gap-4 my-6">
-              <div className="h-px bg-white/10 flex-1"></div>
-              <div className="text-xs text-gray-400">OR</div>
-              <div className="h-px bg-white/10 flex-1"></div>
-            </div> */}
-
-            {/* Social login */}
-            {/* <button className="w-full md:w-[70%] m-auto flex items-center gap-3 justify-start px-4 py-2 md:py-3 rounded-xl bg-[#0b0f12]/50 border border-white/20 text-gray-200">
-              <FcGoogle className="text-xl md:text-2xl" /> Continue with Google
-              <div className="ml-auto text-gray-400">→</div>
-            </button> */}
 
             <p className="text-center text-xs md:text-sm text-gray-400 mt-6">
               Already have an account?{" "}
@@ -186,3 +183,5 @@ const SignUpPage = () => {
 };
 
 export default SignUpPage;
+
+

@@ -61,7 +61,7 @@ const ResetPasswordPage = () => {
         <div className="flex-1 bg-black/40 relative hidden sm:block">
           <img
             src={botImage}
-            alt="AI Trading Bot"
+            alt="Volume Bot"
             className="w-full h-full object-cover opacity-90"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#05060a] via-transparent to-transparent"></div>

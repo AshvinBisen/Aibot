@@ -1,12 +1,38 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { FaFileExcel } from "react-icons/fa";
+import { useAuth } from "../../Hooks/useAuth";
+import { FaRegCopy, FaFileExcel } from "react-icons/fa";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { useAuth } from "../../Hooks/useAuth";
 
-const TradeHistory = () => {
+// Copy button
+function CopyButtonIcon({ text }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      title={copied ? "Copied!" : "Copy"}
+      className={`ml-2 p-1 rounded-full ${
+        copied ? "bg-green-600 text-white" : "bg-gray-700 text-white"
+      }`}
+      style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
+    >
+      <FaRegCopy size={14} />
+    </button>
+  );
+}
+
+const Topups = () => {
   const { user } = useAuth();
+  const botURL = "https://volumebot.furfoori.com";
   const getToday = () => new Date().toISOString().split("T")[0];
   const getMonthAgo = () => {
     const d = new Date();
@@ -16,58 +42,47 @@ const TradeHistory = () => {
 
   const itemsPerPage = 10;
 
-  // ✅ Initial state from cache
-  const [trades, setTrades] = useState(() => {
-    const cached = localStorage.getItem("tradeHistory");
+  const [topups, setTopups] = useState(() => {
+    const cached = localStorage.getItem("topups");
     return cached ? JSON.parse(cached) : [];
   });
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState(getMonthAgo());
   const [endDate, setEndDate] = useState(getToday());
-  const [loading, setLoading] = useState(trades.length === 0); // Loading only if cache empty
+  const [loading, setLoading] = useState(topups.length === 0);
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(trades.length);
+  const [totalItems, setTotalItems] = useState(topups.length);
 
-  const fetchTrades = useCallback(
+  // Fetch topups
+  const fetchTopups = useCallback(
     async (page = 1) => {
-      if (!user?.token) {
-        setError("No authentication token found. Please log in again.");
-        setLoading(false);
-        return;
-      }
+      if (!user?.token) return;
 
       try {
         setError("");
-
         const start = new Date(startDate).toISOString();
         const end = new Date(new Date(endDate).setHours(23, 59, 59, 999)).toISOString();
 
-        const url = `https://volumebot.furfoori.com/api/trades-history?page=${page}&limit=${itemsPerPage}&startDate=${start}&endDate=${end}`;
-
-        const response = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
+        const url = `${botURL}/api/topups?page=${page}&limit=${itemsPerPage}&startDate=${start}&endDate=${end}`;
+        const res = await axios.get(url, {
+          headers: { Authorization: `Bearer ${user.token}` },
         });
 
-        if (response.data?.success) {
-          const { trades, pagination } = response.data.data;
-          setTrades(trades || []);
-          setTotalItems(pagination?.total || trades.length);
+        if (res.data?.success) {
+          const { topups, pagination } = res.data.data;
+          setTopups(topups || []);
+          setTotalItems(pagination?.total || topups.length);
           setTotalPages(pagination?.totalPages || 1);
 
-          // ✅ Cache the latest data
-          localStorage.setItem("tradeHistory", JSON.stringify(trades || []));
+          localStorage.setItem("topups", JSON.stringify(topups || []));
         } else {
-          setError("Failed to fetch trade history.");
+          setError("Failed to fetch topups.");
         }
       } catch (err) {
-        console.error("API Error:", err);
-        if (err.response?.status === 401) setError("Unauthorized: Please log in again.");
-        else if (err.response?.status === 400) setError("Bad Request: Check your date filters.");
-        else setError(err.response?.data?.message || "Error fetching trade history.");
+        console.error(err);
+        setError(err.response?.data?.message || "Error fetching topups.");
       } finally {
         setLoading(false);
       }
@@ -75,47 +90,41 @@ const TradeHistory = () => {
     [user, startDate, endDate, itemsPerPage]
   );
 
-  // ✅ Fetch trades on mount & dependencies change
   useEffect(() => {
-    if (user?.token) fetchTrades(currentPage);
+    if (user?.token) fetchTopups(currentPage);
 
-    // Optional: Polling for real-time update every 30s
     const interval = setInterval(() => {
-      if (user?.token) fetchTrades(currentPage);
+      if (user?.token) fetchTopups(currentPage);
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [user, currentPage, fetchTrades]);
+  }, [user, currentPage, fetchTopups]);
 
-  // Filtered trades
-  const filteredTrades = trades.filter(
-    (trade) =>
-      trade.wallet_address?.toLowerCase().includes(search.toLowerCase()) ||
-      trade.type?.toLowerCase().includes(search.toLowerCase())
+  const filteredTopups = topups.filter(
+    (t) =>
+      t.wallet_address?.toLowerCase().includes(search.toLowerCase()) ||
+      t.token_type?.toLowerCase().includes(search.toLowerCase()) ||
+      t.tx_hash?.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Export to Excel
   const exportToExcel = () => {
-    if (filteredTrades.length === 0) return;
+    if (filteredTopups.length === 0) return;
 
-    const exportData = filteredTrades.map((trade) => ({
-      ID: trade.id,
-      Type: trade.type,
-      "Token Amount": parseFloat(trade.token_amount || 0).toFixed(3),
-      "USDT Amount": parseFloat(trade.usdt_amount || 0).toFixed(3),
-      Price: parseFloat(trade.price || 0).toFixed(6),
-      "Gas Fee (BNB)": trade.gas_fee_bnb,
-      Wallet: trade.wallet_address,
-      "Date & Time": new Date(trade.timestamp).toLocaleString(),
+    const exportData = filteredTopups.map((t) => ({
+      ID: t.id,
+      Wallet: t.wallet_address,
+      "Token Type": t.token_type,
+      Amount: t.amount,
+      Symbol: t.token_symbol,
+      "TX Hash": t.tx_hash,
+      Timestamp: new Date(t.timestamp).toLocaleString(),
     }));
 
-    const worksheet = XLSX.utils.json_to_sheet(exportData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Trades");
-
-    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-    const dataBlob = new Blob([excelBuffer], { type: "application/octet-stream" });
-    saveAs(dataBlob, "Trade_History.xlsx");
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Topups");
+    const buffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    saveAs(new Blob([buffer], { type: "application/octet-stream" }), "Topups.xlsx");
   };
 
   const DateInput = ({ value, onChange, min, max }) => (
@@ -131,7 +140,7 @@ const TradeHistory = () => {
 
   return (
     <div className="p-4 w-full max-w-full bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-gray-800 shadow-xl">
-      <h2 className="text-2xl font-semibold mb-4 text-left">Trade History</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-left">Topups</h2>
 
       {/* Filters */}
       <div className="mb-4 flex flex-col sm:flex-row justify-between gap-4">
@@ -143,7 +152,7 @@ const TradeHistory = () => {
         <div className="flex gap-2 w-full sm:w-auto justify-end items-center">
           <input
             type="text"
-            placeholder="Search by wallet or type..."
+            placeholder="Search by wallet, type or tx..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="px-3 py-2 w-full max-w-[400px] rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gradient-to-br from-gray-900 to-black text-gray-200"
@@ -160,8 +169,8 @@ const TradeHistory = () => {
 
       {/* Table */}
       <div className="overflow-x-auto w-full bg-gradient-to-br from-gray-900 to-black rounded-xl border border-gray-800 shadow-lg p-3 sm:p-6">
-        {loading && trades.length === 0 ? (
-          <p className="text-white text-center py-10">Loading trade history...</p>
+        {loading && topups.length === 0 ? (
+          <p className="text-white text-center py-10">Loading topups...</p>
         ) : error ? (
           <p className="text-red-500 text-center py-10">{error}</p>
         ) : (
@@ -169,35 +178,38 @@ const TradeHistory = () => {
             <thead className="bg-gray-800 text-gray-300">
               <tr>
                 <th className="py-2 px-3">ID</th>
-                <th className="py-2 px-3">Type</th>
-                <th className="py-2 px-3">Token Amount</th>
-                <th className="py-2 px-3">USDT Amount</th>
-                <th className="py-2 px-3">Price</th>
-                <th className="py-2 px-3">Gas Fee (BNB)</th>
                 <th className="py-2 px-3">Wallet</th>
-                <th className="py-2 px-3">Date & Time</th>
+                <th className="py-2 px-3">Token</th>
+                <th className="py-2 px-3">Amount</th>
+                <th className="py-2 px-3">Symbol</th>
+                <th className="py-2 px-3">TX Hash</th>
+                <th className="py-2 px-3">Timestamp</th>
               </tr>
             </thead>
             <tbody>
-              {filteredTrades.length > 0 ? (
-                filteredTrades.map((trade, i) => (
+              {filteredTopups.length > 0 ? (
+                filteredTopups.map((t, i) => (
                   <tr key={i} className="border-b border-gray-800 hover:bg-gray-700/50">
-                    <td className="py-2 px-3">{trade.id}</td>
-                    <td className={`py-2 px-3 font-semibold ${trade.type === "buy" ? "text-green-500" : "text-red-500"}`}>
-                      {trade.type.toUpperCase()}
+                    <td className="py-2 px-3 flex items-center">
+                      <span>{t.id}</span>
+                      <CopyButtonIcon text={t.id} />
                     </td>
-                    <td className="py-2 px-3">{parseFloat(trade.token_amount || 0).toFixed(3)}</td>
-                    <td className="py-2 px-3">{parseFloat(trade.usdt_amount || 0).toFixed(3)}</td>
-                    <td className="py-2 px-3">{parseFloat(trade.price || 0).toFixed(6)}</td>
-                    <td className="py-2 px-3">{trade.gas_fee_bnb}</td>
-                    <td className="py-2 px-3 truncate max-w-[150px]">{trade.wallet_address?.slice(0, 8)}...{trade.wallet_address?.slice(-6)}</td>
-                    <td className="py-2 px-3 whitespace-nowrap">{new Date(trade.timestamp).toLocaleString()}</td>
+                    <td className="py-2 px-3 truncate max-w-[150px]">
+                      {t.wallet_address?.slice(0, 8)}...{t.wallet_address?.slice(-6)}
+                    </td>
+                    <td className="py-2 px-3 flex items-center gap-1">
+                      {t.token_icon} {t.token_type}
+                    </td>
+                    <td className="py-2 px-3">{parseFloat(t.amount).toFixed(6)}</td>
+                    <td className="py-2 px-3">{t.token_symbol}</td>
+                    <td className="py-2 px-3 truncate max-w-[180px]">{t.tx_hash}</td>
+                    <td className="py-2 px-3 whitespace-nowrap">{new Date(t.timestamp).toLocaleString()}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="py-6 text-center text-gray-400">
-                    No trades found
+                  <td colSpan="7" className="py-6 text-center text-gray-400">
+                    No topups found
                   </td>
                 </tr>
               )}
@@ -210,7 +222,7 @@ const TradeHistory = () => {
       {totalItems > 0 && (
         <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm text-gray-400">
-            Page {currentPage} of {totalPages} ({totalItems} trades)
+            Page {currentPage} of {totalPages} ({totalItems} topups)
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -234,6 +246,4 @@ const TradeHistory = () => {
   );
 };
 
-export default TradeHistory;
-
-
+export default Topups;
