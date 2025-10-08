@@ -50,7 +50,7 @@ const AppRoutes = () => {
         <Route path="trend-settings" element={<TrendSettings />} /> 
         <Route path="trade-history" element={<TradeHistory />} /> 
         <Route path="last-balance" element={<LastBalance />} />
-        <Route path="top-ups" element={<Topups />} />
+        <Route path="topup-history" element={<Topups />} />
         <Route path="setting" element={<Setting />} /> 
 
         {/* 👤 Profile Routes */}

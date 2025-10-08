@@ -5,10 +5,11 @@ import { RiWallet3Fill } from "react-icons/ri";
 import { SiCoinbase } from "react-icons/si";
 import { FaGhost, FaFirefoxBrowser } from "react-icons/fa";
 import { HiMenuAlt2 } from "react-icons/hi";
+import userAvatar from "../assets/logo.png"; 
 
 export default function Navbar({
-  userName = "John Doe",
-  userAvatar = "https://i.pravatar.cc/40",
+  userName = "Volume bot",
+  // userAvatar = "https://i.pravatar.cc/40",
   toggleSidebar,
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,7 +32,7 @@ export default function Navbar({
           <button onClick={toggleSidebar} className="md:hidden text-white text-2xl">
             <HiMenuAlt2 />
           </button>
-          <div className="hidden md:block w-full max-w-xs md:max-w-[16rem] lg:max-w-[22rem] relative">
+          {/* <div className="hidden md:block w-full max-w-xs md:max-w-[16rem] lg:max-w-[22rem] relative">
             <input
               type="text"
               placeholder="Search..."
@@ -47,7 +48,7 @@ export default function Navbar({
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
             </svg>
-          </div>
+          </div> */}
         </div>
 
         {/* Right Section */}

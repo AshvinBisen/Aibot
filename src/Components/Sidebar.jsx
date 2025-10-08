@@ -8,6 +8,7 @@ import {
   FaHistory,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { FaCreditCard } from "react-icons/fa";
 import { FaBalanceScale } from "react-icons/fa";
 import { FaCog, FaTools, FaWrench, FaSlidersH } from "react-icons/fa";
 import { MdSettings } from "react-icons/md";
@@ -42,10 +43,10 @@ const Sidebar = ({ isMobileOpen, toggleSidebar }) => {
     { name: "Dashboard", icon: <FaThLarge />, path: "/dashboard" },
     { name: "Trade History", icon: <FaHistory />, path: "/dashboard/trade-history" },
     { name: "Wallet Management", icon: <FaWallet />, path: "/dashboard/wallet-management" },
-    { name: "Bot Wallet", icon: <FaWallet />, path: "/dashboard/bot-wallet" },
+    { name: "Bot Wallet", icon: <FaCreditCard />, path: "/dashboard/bot-wallet" },
     { name: "Last Balance", icon: <FaBalanceScale />, path: "/dashboard/last-balance" },
     { name: "Trend Settings", icon: <FaChartLine />, path: "/dashboard/trend-settings" },
-    { name: "Top Ups", icon: <FaTools />, path: "/dashboard/top-ups" },
+    { name: "TopUp History", icon: <FaTools />, path: "/dashboard/topup-history" },
     // { name: "Setting", icon: <FaCog />, path: "/dashboard/setting" },
   ];
 
