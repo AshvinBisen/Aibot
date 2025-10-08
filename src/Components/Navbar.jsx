@@ -29,10 +29,10 @@ export default function Navbar({
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-[#0a0a0a] px-4 lg:h-16 lg:px-6">
         {/* Left Section */}
         <div className="flex items-center gap-3 w-full md:w-auto">
-          <button onClick={toggleSidebar} className="md:hidden text-white text-2xl">
+          {/* <button onClick={toggleSidebar} className="md:hidden text-white text-2xl">
             <HiMenuAlt2 />
           </button>
-          {/* <div className="hidden md:block w-full max-w-xs md:max-w-[16rem] lg:max-w-[22rem] relative">
+          <div className="hidden md:block w-full max-w-xs md:max-w-[16rem] lg:max-w-[22rem] relative">
             <input
               type="text"
               placeholder="Search..."
