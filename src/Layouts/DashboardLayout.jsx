@@ -12,7 +12,7 @@ const DashboardLayout = () => {
   return (
     <div className="flex relative min-h-screen bg-[#000] text-white w-full">
       {/* Sidebar */}
-      <div className="h-screen sticky top-0 overflow-hidden z-50">
+      <div className="h-screen sticky top-0 overflow-hidden z-70">
         <Sidebar
           isMobileOpen={isMobileOpen}
           toggleSidebar={() => setIsMobileOpen(!isMobileOpen)}

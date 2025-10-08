@@ -55,7 +55,7 @@ const Sidebar = ({ isMobileOpen, toggleSidebar }) => {
   return (
     <aside
       className={`fixed md:static top-0 left-0 h-screen bg-[#070707be] text-white flex flex-col shadow-xl border-r border-white
-      transition-transform duration-300 z-40
+      transition-transform duration-300 z-80
       ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
       ${isExpanded ? "w-56" : "w-22"}`}
     >

@@ -152,7 +152,7 @@ const TradeHistory = () => {
   ];
 
   return (
-    <div className="p-2 md:p-4 w-full max-w-full">
+    <div className="p-2 lg:p-4 w-full max-w-full">
       {/* CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
         {cards.map((card, idx) => (
@@ -161,7 +161,7 @@ const TradeHistory = () => {
               <h3 className="text-gray-400 text-sm font-medium">{card.title}</h3>
               {card.icon}
             </div>
-            <p className="text-lg font-bold text-white">{card.value}</p>
+            <p className="text-sm font-bold text-white">{card.value}</p>
           </div>
         ))}
       </div>
